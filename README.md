@@ -23,7 +23,7 @@ var config = {}
 
 config.orion_url='http://orion:1026';
 config.fiwareService="tutorial";
-config.fiwareServicePath="/";
+config.fiwareServicePath="/train";
 config.interval= 10; // second
 
 module.exports = config;
