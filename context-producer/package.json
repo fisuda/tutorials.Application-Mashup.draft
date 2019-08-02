@@ -1,0 +1,12 @@
+{
+  "name": "context-producer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "context-producer.js",
+  "author": "Kazuhito Suda",
+  "license": "MIT",
+  "dependencies": {
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4"
+  }
+}

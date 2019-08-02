@@ -1,0 +1,8 @@
+var config = {}
+
+config.orion_url='http://192.168.11.241:1026';
+config.fiwareService="tutorial";
+config.fiwareServicePath="/";
+config.interval= 10; // second
+
+module.exports = config;
