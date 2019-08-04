@@ -1,12 +1,6 @@
 {
   "name": "train-datamodel2poi",
-  "dependencies": {
-    "jquery": "^3.0.0"
-  },
+  "dependencies": {},
   "devDependencies": {},
-  "exportsOverride": {
-    "jquery": {
-      "js": "dist/jquery.min.js"
-    }
-  }
+  "exportsOverride": {}
 }
