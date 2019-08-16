@@ -1,11 +1,11 @@
 'use strict';
 
 const config = require('./config');
-const rp = require('request-promise');
-
+const request = require('request');
 const orionUrl = deleteTrailingSlash(config.orion_url);
 const fiwareService = config.fiwareService;
 const fiwareServicePath = config.fiwareServicePath;
+const trains = config.trains;
 const interval = config.interval * 1000;
 
 var trainRoute = {
@@ -200,43 +200,32 @@ var trainLocation = [
 function deleteTrailingSlash(url) {
   return url.substr(-1, 1) != '/' ? url : url.slice(0, -1);
 }
-async function appendRequest(entities) {
 
-    var headers = {
-      'Content-Type': 'application/json',
-      'Fiware-Service': fiwareService,
-      'Fiware-ServicePath': fiwareServicePath
-    };
+function appendRequest(entities) {
+  var headers = {
+    'Content-Type': 'application/json',
+    'Fiware-Service': fiwareService,
+    'Fiware-ServicePath': fiwareServicePath
+  };
+  
+  var options = {
+      url: orionUrl + '/v2/op/update',
+      method: 'POST',
+      headers: headers,
+      json: {
+        "actionType": "append",
+        "entities": entities
+      }
+  };
     
-    var options = {
-        url: orionUrl + '/v2/op/update',
-        method: 'POST',
-        headers: headers,
-        json: {
-          "actionType": "append",
-          "entities": entities
-        }
-    };
-    
-    var ret;
-    try {
-      await rp(options, function (error, response, body) {
-        if (error) {
-          console.log('appendRequest: ' + error.message);
-          process.exit(1);
-        }
-        ret = [response.statusCode, response.statusMessage]; // 204 No Content
-      });
-    } catch (e) {
-      console.error(e);
-    } finally {
-      return ret;
+  request(options, function (error, response, body) {
+    if (error || response.statusCode !== 204)  {
+      console.log('error');
     }
+  });
 }
 
 async function run() {
-  console.log("Start");
-
   let entities = [];
 
   stationLocation.forEach(station => {
@@ -262,24 +251,32 @@ async function run() {
 
   console.log("add station");
 
+  if (trains < 1 || trains > 5) {
+      trains = 3;
+  }
+
   while (true) {
     for (let i = 0; i < trainLocation.length; i++) {
-      console.log(trainLocation[i]);
-      appendRequest([{
-        id: 'urn:ngsi-ld:Train:Train001',
-        type: 'Train',
-        name: {
-          type: 'Text',
-          value: 'Train001'
-        },
-        location: {
-          type: 'geo:json',
-          value: {
-            type: 'Point',
-            coordinates: trainLocation[i]
+      entities= [];
+      for (let j = 0; j < trains; j++) {
+        let pos = (i + j * Math.floor(trainLocation.length / trains)) % trainLocation.length;
+        entities.push({
+          id: 'urn:ngsi-ld:Train:Train00' + j ,
+          type: 'Train',
+          name: {
+            type: 'Text',
+            value: 'Train00' + j
+          },
+          location: {
+            type: 'geo:json',
+            value: {
+              type: 'Point',
+              coordinates: trainLocation[pos]
+            }
           }
-        }
-      }]);
+        });
+      }
+      appendRequest(entities);
       await sleep(interval);
     }
   }

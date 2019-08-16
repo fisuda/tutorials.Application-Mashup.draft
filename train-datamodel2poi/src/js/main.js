@@ -55,7 +55,7 @@
             infoWindow: null,
             currentLocation: coordinates,
             location: entity.location,
-            style: {'color': entity.lineColor, 'width': 5},
+            style: { stroke: {'color': entity.lineColor, 'width': 5} },
             selectable: false
         };
 
