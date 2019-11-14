@@ -42,9 +42,9 @@
         }
     };
 
-//
-//  Route
-//
+    //
+    //  Route
+    //
     var renderRoute = function renderRoute(entity, coordinates) {
         var poi = {
             id: entity.id,
@@ -62,9 +62,9 @@
         return poi;
     };
 
-//
-//  Station
-//
+    //
+    //  Station
+    //
     var renderStation = function renderStation(entity, coordinates) {
         var url = 'images/station.png';
 
@@ -112,9 +112,9 @@
         return infoWindow;
     };
 
-//
-//  Train
-//
+    //
+    //  Train
+    //
     var renderTrain = function renderTrain(entity, coordinates) {
         var icon;
 
